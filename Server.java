@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Server {
 
-    public void sendDetails(Socket socket) {
+    public void client(Socket socket) {
         System.out.printf("Connecting to Client...");
         String serverMenu = "--------------------\nWelcome to CharFreqServer \nType any of the following options:\nNewRequest <INPUTSTRING>\nStatusRequest <passcode>\nExit\n--------------------\n Enter: \n";
         String line = "";
@@ -18,14 +18,12 @@ public class Server {
             System.out.printf("sending menu\n");
             out.writeBytes(serverMenu);
             
-            while (!((line = in.readLine()).toUpperCase().equals("EXIT"))) {
+            while ((line = in.readLine()) != null) {
                 String[] temp = line.split(" ");
                 
-                if (temp[0].toUpperCase().equals("HELLO")) {
-                    out.writeBytes("DING DING DING\n");
-                }
-                
-                
+                System.out.print(line);
+                out.writeBytes("Server says " + line + "\n");
+
             }
             
 
@@ -34,8 +32,6 @@ public class Server {
         } finally {
             System.out.printf("Lost Connection to Client..");
         }
-        
-        
     }
 
     public Server(int port) {
@@ -46,7 +42,7 @@ public class Server {
 
             while(true) {
                 Socket socket = server.accept();
-                new Thread(new Runnable() { public void run() {sendDetails(socket);} }).start();
+                new Thread(new Runnable() { public void run() {client(socket);} }).start();
             }
 
         } catch(IOException i) {
